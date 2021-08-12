@@ -3,35 +3,49 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class CarController : MonoBehaviour
+using MLAPI;
+public class CarController : NetworkBehaviour
 {
     enum Traccion { Trasera, Delantera, n4x4 };
+    [SerializeField] Transform cameraTransform;
     [SerializeField] Traccion traccion;
-    private float horizontalInput;
-    private float verticalInput;
-    private float steeringAngle;
+    
 
+    [Header("Motor")]
     [SerializeField] private float motorForce = 50;
     [SerializeField] private float breakForce;
     [SerializeField] private float maxSteerAngle = 30;
 
+    [Header("Ruedas")]
     [SerializeField] private WheelCollider frontLeftWheelCollider, frontRightWheelCollider;
     [SerializeField] private WheelCollider rearLeftWheelCollider, rearRightWheelCollider;
 
     [SerializeField] private Transform frontLeftWheelTransform, frontRightWheeTransform;
     [SerializeField] private Transform rearLeftWheelTransform, rearRightWheelTransform;
     Rigidbody rb;
+    private float horizontalInput;
+    private float verticalInput;
+    private float steeringAngle;
     private void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        if(!IsLocalPlayer){
+            cameraTransform.GetComponent<AudioListener>().enabled = false;
+            cameraTransform.GetComponent<Camera>().enabled = false;
+        }else{
+            rb = GetComponent<Rigidbody>();
+        }
     }
     private void FixedUpdate()
     {
-        Debug.Log(rb.velocity.magnitude * 3.6f);
-        GetInput();
-        Steer();
-        Accelerate();
-        UpdateWheelPoses();
+        
+        if (IsLocalPlayer)
+        {
+            GetInput();
+            Steer();
+            Accelerate();
+            UpdateWheelPoses();
+        }
+
     }
     public void GetInput()
     {
@@ -56,7 +70,8 @@ public class CarController : MonoBehaviour
             rearLeftWheelCollider.motorTorque = verticalInput * motorForce;
             rearRightWheelCollider.motorTorque = verticalInput * motorForce;
         }
-        if(traccion == Traccion.n4x4){
+        if (traccion == Traccion.n4x4)
+        {
             frontLeftWheelCollider.motorTorque = verticalInput * motorForce;
             frontRightWheelCollider.motorTorque = verticalInput * motorForce;
             rearLeftWheelCollider.motorTorque = verticalInput * motorForce;
