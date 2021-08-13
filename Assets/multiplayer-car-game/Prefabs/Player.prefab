@@ -907,8 +907,18 @@ MonoBehaviour:
   cameraTransform: {fileID: 6217087759124894462}
   traccion: 0
   motorForce: 1000
-  breakForce: 0
+  breakForce: 2000
   maxSteerAngle: 30
+  GearRatio:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  maxEngineRPM: 7000
+  minEngineRPM: 1000
+  maxSpeed: 100
   frontLeftWheelCollider: {fileID: 6217087760147159745}
   frontRightWheelCollider: {fileID: 6217087759694715718}
   rearLeftWheelCollider: {fileID: 6217087759583069147}
