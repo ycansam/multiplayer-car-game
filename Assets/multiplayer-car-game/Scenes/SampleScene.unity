@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.28673822, g: 0.26999593, b: 0.21614659, a: 1}
+  m_IndirectSpecularColor: {r: 0.4415336, g: 0.48307955, b: 0.5309415, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -366,7 +366,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: -1.00769634e+27, z: 4.5904e-41, w: 0.0000000020685622}
+  m_BoundingSphereOverride: {x: 6.42e-43, y: -4.066967, z: 6.42e-43, w: 1}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -378,13 +378,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
-  m_LocalRotation: {x: -0.014744346, y: 0.17880853, z: 0.14911538, w: 0.9724067}
+  m_LocalRotation: {x: 0.06358849, y: 0.16776915, z: -0.28357735, w: 0.9420159}
   m_LocalPosition: {x: 0, y: 1.907, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 184.704, y: -159.84799, z: 556.6}
+  m_LocalEulerAnglesHint: {x: 167.587, y: -163.338, z: 508.318}
 --- !u!1 &725107347
 GameObject:
   m_ObjectHideFlags: 0
@@ -591,7 +591,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5894421492192948957, guid: bd9d4a8f5b3418a46bcc9c3ec870aabd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.3679
+      value: 9.18
       objectReference: {fileID: 0}
     - target: {fileID: 5894421492192948957, guid: bd9d4a8f5b3418a46bcc9c3ec870aabd, type: 3}
       propertyPath: m_LocalPosition.y
@@ -772,7 +772,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1428067019}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -3.54, z: 0}
+  m_LocalPosition: {x: 0, y: -0.71, z: 0}
   m_LocalScale: {x: 578.1756, y: 62.128, z: 703.59955}
   m_Children: []
   m_Father: {fileID: 0}

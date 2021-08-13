@@ -60,15 +60,16 @@ public class CarController : NetworkBehaviour
         else
         {
             rb = GetComponent<Rigidbody>();
+            maxSpeed = maxSpeed + 0.35f; // para evitar errores en el gui
+            maxSpeedByGear = maxSpeed / GearRatio.Length; // maxima velocidad por marcha
         }
-        maxSpeed = maxSpeed + 0.35f; // para evitar errores en el gui
-        maxSpeedByGear = maxSpeed / GearRatio.Length; // maxima velocidad por marcha
     }
     private void FixedUpdate()
     {
-        actualSpeed = rb.velocity.magnitude * 3.6f;
         if (IsLocalPlayer)
         {
+            actualSpeed = rb.velocity.magnitude * 3.6f;
+
             GetInput();
             Steer();
             Accelerate(actualSpeed);
@@ -182,12 +183,12 @@ public class CarController : NetworkBehaviour
     {
         if (left_whl_2 != null)
         {
-            return (((left_whl.rpm + right_whl.rpm + left_whl_2.rpm + right_whl_2.rpm) / 2) * GearRatio.Length / GearRatio[currentGear]) / (motorForce / 1000) ;
+            return (((left_whl.rpm + right_whl.rpm + left_whl_2.rpm + right_whl_2.rpm) / 2) * GearRatio.Length / GearRatio[currentGear]) / (motorForce / 1000);
         }
         else
         {
             // se calcula las whel rpm * Cantidad de marchas / marcha actual / fuerza motor / 1000.
-            return ((left_whl.rpm + right_whl.rpm) * GearRatio.Length / GearRatio[currentGear]) / (motorForce / 1000) ;
+            return ((left_whl.rpm + right_whl.rpm) * GearRatio.Length / GearRatio[currentGear]) / (motorForce / 1000);
         }
     }
     private void ShiftGearsAuto()
@@ -253,15 +254,18 @@ public class CarController : NetworkBehaviour
         }
         else
         {
-            if(actualSpeed < maxSpeedByGear * GearRatio[currentGear] && !isAutomatic && actualSpeed >  maxSpeedByGear * GearRatio[currentGear] - maxSpeedByGear ){
+            if (actualSpeed < maxSpeedByGear * GearRatio[currentGear] && !isAutomatic && actualSpeed > maxSpeedByGear * GearRatio[currentGear] - maxSpeedByGear)
+            {
                 return 1;
-            }else if(!isAutomatic){
+            }
+            else if (!isAutomatic)
+            {
                 return GearRatio[currentGear] * GearRatio[currentGear];
             }
             return 1;
         }
 
-        
+
     }
 
 

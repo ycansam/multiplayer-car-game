@@ -6,4 +6,5 @@ public static class GameConstants
 {
     public const string HORIZONTAL = "Horizontal";
     public const string VERTICAL = "Vertical";
+    public const string EMISSION = "_EMISSION";
 }
