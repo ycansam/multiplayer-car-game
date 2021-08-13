@@ -13,15 +13,15 @@ public class CarController : NetworkBehaviour
 
     [Header("Motor")]
     [SerializeField] private float motorForce = 50;
-    [SerializeField] private float breakForce;
+    [SerializeField] private float brakeForce;
     [SerializeField] private float maxSteerAngle = 30;
-
+    [SerializeField] private float maxSpeed;
+    private float actualSpeed;
     [SerializeField] private float[] GearRatio;
     private int currentGear = 0;
     private float engineRPM;
     [SerializeField] private float maxEngineRPM;
     [SerializeField] private float minEngineRPM;
-    [SerializeField] private float maxSpeed;
 
 
 
@@ -36,9 +36,6 @@ public class CarController : NetworkBehaviour
     [SerializeField] private Transform rearLeftWheelTransform, rearRightWheelTransform;
 
 
-
-
-
     Rigidbody rb;
     private float horizontalInput;
     private float verticalInput;
@@ -49,7 +46,7 @@ public class CarController : NetworkBehaviour
 
         if (IsLocalPlayer)
         {
-            GUILayout.Label("KPH: " + rb.velocity.magnitude * 3.6f);
+            GUILayout.Label("KPH: " + actualSpeed);
             GUILayout.Label("RPM: " + engineRPM);
             GUILayout.Label("GEAR: " + GearRatio[currentGear]);
         }
@@ -68,12 +65,24 @@ public class CarController : NetworkBehaviour
     }
     private void FixedUpdate()
     {
+        actualSpeed = rb.velocity.magnitude * 3.6f;
+
 
         if (IsLocalPlayer)
         {
             GetInput();
             Steer();
-            Accelerate();
+            if (actualSpeed <= maxSpeed)
+            {
+                Accelerate();
+            }
+            else
+            {
+                frontLeftWheelCollider.motorTorque = 0f;
+                frontRightWheelCollider.motorTorque = 0f;
+                rearLeftWheelCollider.motorTorque = 0f;
+                rearRightWheelCollider.motorTorque = 0f;
+            }
             UpdateWheelPoses();
             Brakes();
         }
@@ -93,10 +102,10 @@ public class CarController : NetworkBehaviour
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            frontLeftWheelCollider.brakeTorque = breakForce;
-            frontRightWheelCollider.brakeTorque = breakForce;
-            rearLeftWheelCollider.brakeTorque = breakForce;
-            rearRightWheelCollider.brakeTorque = breakForce;
+            frontLeftWheelCollider.brakeTorque = brakeForce;
+            frontRightWheelCollider.brakeTorque = brakeForce;
+            rearLeftWheelCollider.brakeTorque = brakeForce;
+            rearRightWheelCollider.brakeTorque = brakeForce;
         }
         else
         {
@@ -106,6 +115,13 @@ public class CarController : NetworkBehaviour
             rearRightWheelCollider.brakeTorque = 0;
         }
 
+        //  si esta en marcha y le da a frenar con la "S"
+        if(rearRightWheelCollider.rpm > 0 && verticalInput < 0){
+            frontLeftWheelCollider.brakeTorque = brakeForce/4;
+            frontRightWheelCollider.brakeTorque = brakeForce/4;
+            rearLeftWheelCollider.brakeTorque = brakeForce/4;
+            rearRightWheelCollider.brakeTorque = brakeForce/4;
+        }
     }
     private void Accelerate()
     {
@@ -114,7 +130,6 @@ public class CarController : NetworkBehaviour
             frontLeftWheelCollider.motorTorque = verticalInput * motorForce;
             frontRightWheelCollider.motorTorque = verticalInput * motorForce;
 
-
             engineRPM = GetEngineRPM(frontLeftWheelCollider, frontRightWheelCollider);
             ShiftGears();
         }
@@ -122,8 +137,6 @@ public class CarController : NetworkBehaviour
         {
             rearLeftWheelCollider.motorTorque = verticalInput * motorForce;
             rearRightWheelCollider.motorTorque = verticalInput * motorForce;
-
-
             engineRPM = GetEngineRPM(rearLeftWheelCollider, rearRightWheelCollider);
             ShiftGears();
         }
@@ -158,20 +171,19 @@ public class CarController : NetworkBehaviour
                 if (currentGear < GearRatio.Length - 1)
                 {
                     currentGear++;
-                    engineRPM = minEngineRPM;
                 }
 
             }
         }
+            Debug.Log(engineRPM * GearRatio[currentGear] );
 
         if (engineRPM <= minEngineRPM)
         {
-            if (engineRPM * GearRatio[currentGear] < minEngineRPM)
+            if (engineRPM < minEngineRPM)
             {
-                if (currentGear > 1)
+                if (currentGear > 0)
                 {
                     currentGear--;
-                    engineRPM = maxEngineRPM;
                 }
 
             }

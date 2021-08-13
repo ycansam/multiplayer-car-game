@@ -772,7 +772,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1428067019}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -32.6, z: 0}
+  m_LocalPosition: {x: 0, y: -3.54, z: 0}
   m_LocalScale: {x: 578.1756, y: 62.128, z: 703.59955}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1496,6 +1496,7 @@ MonoBehaviour:
   GearRatio: []
   maxEngineRPM: 0
   minEngineRPM: 0
+  maxSpeed: 0
   frontLeftWheelCollider: {fileID: 101774468}
   frontRightWheelCollider: {fileID: 1931551335}
   rearLeftWheelCollider: {fileID: 1625102506}
