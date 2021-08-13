@@ -1490,13 +1490,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraTransform: {fileID: 0}
   traccion: 0
+  isAutomatic: 0
   motorForce: 800
-  breakForce: 0
+  brakeForce: 0
   maxSteerAngle: 30
+  maxSpeed: 0
   GearRatio: []
   maxEngineRPM: 0
   minEngineRPM: 0
-  maxSpeed: 0
   frontLeftWheelCollider: {fileID: 101774468}
   frontRightWheelCollider: {fileID: 1931551335}
   rearLeftWheelCollider: {fileID: 1625102506}

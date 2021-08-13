@@ -9,6 +9,7 @@ public class CarController : NetworkBehaviour
     enum Traccion { Trasera, Delantera, n4x4 };
     [SerializeField] Transform cameraTransform;
     [SerializeField] Traccion traccion;
+    [SerializeField] bool isAutomatic = true;
 
 
     [Header("Motor")]
@@ -22,9 +23,7 @@ public class CarController : NetworkBehaviour
     private float engineRPM;
     [SerializeField] private float maxEngineRPM;
     [SerializeField] private float minEngineRPM;
-
-
-
+    private float maxSpeedByGear;
 
 
 
@@ -62,26 +61,24 @@ public class CarController : NetworkBehaviour
         {
             rb = GetComponent<Rigidbody>();
         }
+        maxSpeed = maxSpeed + 0.35f; // para evitar errores en el gui
+        maxSpeedByGear = maxSpeed / GearRatio.Length; // maxima velocidad por marcha
     }
     private void FixedUpdate()
     {
         actualSpeed = rb.velocity.magnitude * 3.6f;
-
-
         if (IsLocalPlayer)
         {
             GetInput();
             Steer();
-            if (actualSpeed <= maxSpeed)
+            Accelerate(actualSpeed);
+            if (isAutomatic)
             {
-                Accelerate();
+                ShiftGearsAuto();
             }
             else
             {
-                frontLeftWheelCollider.motorTorque = 0f;
-                frontRightWheelCollider.motorTorque = 0f;
-                rearLeftWheelCollider.motorTorque = 0f;
-                rearRightWheelCollider.motorTorque = 0f;
+                ShiftGearManual();
             }
             UpdateWheelPoses();
             Brakes();
@@ -116,53 +113,84 @@ public class CarController : NetworkBehaviour
         }
 
         //  si esta en marcha y le da a frenar con la "S"
-        if(rearRightWheelCollider.rpm > 0 && verticalInput < 0){
-            frontLeftWheelCollider.brakeTorque = brakeForce/4;
-            frontRightWheelCollider.brakeTorque = brakeForce/4;
-            rearLeftWheelCollider.brakeTorque = brakeForce/4;
-            rearRightWheelCollider.brakeTorque = brakeForce/4;
+        if (rearRightWheelCollider.rpm > 0 && verticalInput < 0)
+        {
+            frontLeftWheelCollider.brakeTorque = brakeForce / 4;
+            frontRightWheelCollider.brakeTorque = brakeForce / 4;
+            rearLeftWheelCollider.brakeTorque = brakeForce / 4;
+            rearRightWheelCollider.brakeTorque = brakeForce / 4;
         }
     }
-    private void Accelerate()
+    private void DisableMotor(float motorForceReduce)
     {
-        if (traccion == Traccion.Delantera)
+        // parando el motor cuando alcanza el limite
+        frontLeftWheelCollider.motorTorque = motorForceReduce;
+        frontRightWheelCollider.motorTorque = motorForceReduce;
+        rearLeftWheelCollider.motorTorque = motorForceReduce;
+        rearRightWheelCollider.motorTorque = motorForceReduce;
+    }
+    private void Accelerate(float actualSpeed)
+    {
+        if (actualSpeed < maxSpeed && !GoingBackwards())
         {
-            frontLeftWheelCollider.motorTorque = verticalInput * motorForce;
-            frontRightWheelCollider.motorTorque = verticalInput * motorForce;
+            if (traccion == Traccion.Delantera)
+            {
+                frontLeftWheelCollider.motorTorque = verticalInput * motorForce / CheckingCorrectGear();
+                frontRightWheelCollider.motorTorque = verticalInput * motorForce / CheckingCorrectGear();
 
-            engineRPM = GetEngineRPM(frontLeftWheelCollider, frontRightWheelCollider);
-            ShiftGears();
+                engineRPM = GetEngineRPM(frontLeftWheelCollider, frontRightWheelCollider);
+            }
+
+            if (traccion == Traccion.Trasera)
+            {
+                Debug.Log(CheckingCorrectGear());
+                rearLeftWheelCollider.motorTorque = verticalInput * motorForce / CheckingCorrectGear();
+                rearRightWheelCollider.motorTorque = verticalInput * motorForce / CheckingCorrectGear();
+                engineRPM = GetEngineRPM(rearLeftWheelCollider, rearRightWheelCollider);
+            }
+
+            if (traccion == Traccion.n4x4)
+            {
+                frontLeftWheelCollider.motorTorque = verticalInput * motorForce / CheckingCorrectGear() / 2;
+                frontRightWheelCollider.motorTorque = verticalInput * motorForce / CheckingCorrectGear() / 2;
+                rearLeftWheelCollider.motorTorque = verticalInput * motorForce / CheckingCorrectGear() / 2;
+                rearRightWheelCollider.motorTorque = verticalInput * motorForce / CheckingCorrectGear() / 2;
+                engineRPM = GetEngineRPM(frontLeftWheelCollider, frontRightWheelCollider, rearLeftWheelCollider, rearRightWheelCollider);
+            }
         }
-        if (traccion == Traccion.Trasera)
+        else
         {
-            rearLeftWheelCollider.motorTorque = verticalInput * motorForce;
-            rearRightWheelCollider.motorTorque = verticalInput * motorForce;
-            engineRPM = GetEngineRPM(rearLeftWheelCollider, rearRightWheelCollider);
-            ShiftGears();
+            DisableMotor(0f);
         }
-        if (traccion == Traccion.n4x4)
+
+    }
+    private bool GoingBackwards()
+    {
+        float mediaRpm = (rearRightWheelCollider.rpm + frontRightWheelCollider.rpm + rearLeftWheelCollider.rpm + rearRightWheelCollider.rpm) / 4;
+        if (actualSpeed > 50)
         {
-            frontLeftWheelCollider.motorTorque = verticalInput * motorForce;
-            frontRightWheelCollider.motorTorque = verticalInput * motorForce;
-            rearLeftWheelCollider.motorTorque = verticalInput * motorForce;
-            rearRightWheelCollider.motorTorque = verticalInput * motorForce;
-            engineRPM = GetEngineRPM(frontLeftWheelCollider, frontRightWheelCollider, rearLeftWheelCollider, rearRightWheelCollider);
-            ShiftGears();
+            if (mediaRpm < 0)
+            {
+                DisableMotor(0f);
+                return true;
+            }
         }
+        return false;
     }
 
     private float GetEngineRPM(WheelCollider left_whl, WheelCollider right_whl, WheelCollider left_whl_2 = null, WheelCollider right_whl_2 = null)
     {
         if (left_whl_2 != null)
         {
-            return (left_whl.rpm + right_whl.rpm + left_whl_2.rpm + right_whl_2.rpm) / 4 * GearRatio[currentGear];
+            return (((left_whl.rpm + right_whl.rpm + left_whl_2.rpm + right_whl_2.rpm) / 2) * GearRatio.Length / GearRatio[currentGear]) / (motorForce / 1000) ;
         }
         else
         {
-            return (left_whl.rpm + right_whl.rpm) * GearRatio.Length / GearRatio[currentGear];
+            // se calcula las whel rpm * Cantidad de marchas / marcha actual / fuerza motor / 1000.
+            return ((left_whl.rpm + right_whl.rpm) * GearRatio.Length / GearRatio[currentGear]) / (motorForce / 1000) ;
         }
     }
-    private void ShiftGears()
+    private void ShiftGearsAuto()
     {
         if (engineRPM >= maxEngineRPM)
         {
@@ -170,24 +198,70 @@ public class CarController : NetworkBehaviour
             {
                 if (currentGear < GearRatio.Length - 1)
                 {
+                    DisableMotor(0f);
                     currentGear++;
                 }
 
             }
         }
-            Debug.Log(engineRPM * GearRatio[currentGear] );
-
         if (engineRPM <= minEngineRPM)
         {
             if (engineRPM < minEngineRPM)
             {
                 if (currentGear > 0)
                 {
+                    DisableMotor(0f);
                     currentGear--;
                 }
 
             }
         }
+    }
+    private void ShiftGearManual()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (currentGear > 0)
+            {
+                currentGear--;
+            }
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (currentGear < GearRatio.Length - 1)
+            {
+                currentGear++;
+            }
+        }
+        if (actualSpeed > maxSpeedByGear * GearRatio[currentGear])
+        {
+            if (engineRPM >= maxEngineRPM - 400f)
+            {
+                DisableMotor(-500f);
+            }
+        }
+
+    }
+    private float CheckingCorrectGear()
+    {
+        // si la velocidad actual esta por encima de la velocidad permitida por marcha, reducira la velocidad dependiendo de la velocidad en la que este.
+        if (actualSpeed > maxSpeedByGear * GearRatio[currentGear] && isAutomatic)
+        {
+            currentGear++;
+            // reduccion exponencial
+            return GearRatio[currentGear] * GearRatio[currentGear];
+        }
+        else
+        {
+            if(actualSpeed < maxSpeedByGear * GearRatio[currentGear] && !isAutomatic && actualSpeed >  maxSpeedByGear * GearRatio[currentGear] - maxSpeedByGear ){
+                return 1;
+            }else if(!isAutomatic){
+                return GearRatio[currentGear] * GearRatio[currentGear];
+            }
+            return 1;
+        }
+
+        
     }
 
 

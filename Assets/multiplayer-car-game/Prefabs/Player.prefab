@@ -905,11 +905,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraTransform: {fileID: 6217087759124894462}
-  traccion: 0
+  traccion: 2
+  isAutomatic: 1
   motorForce: 1000
   brakeForce: 1500
   maxSteerAngle: 30
-  maxSpeed: 230.4
+  maxSpeed: 230
   GearRatio:
   - 1
   - 2
