@@ -124,6 +124,36 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1 &2156404868607299766
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7682916438287236296}
+  m_Layer: 0
+  m_Name: Frenos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7682916438287236296
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2156404868607299766}
+  m_LocalRotation: {x: -0, y: 0.000000014901161, z: -0, w: 1}
+  m_LocalPosition: {x: -9.18, y: 0.06, z: -4.1086264}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5894421492192948957}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2634950288114868980
 GameObject:
   m_ObjectHideFlags: 0
@@ -656,6 +686,36 @@ Transform:
   m_Father: {fileID: 4709068818895053746}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 15.298, y: 0, z: 0}
+--- !u!1 &5369035350166962058
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8851280896254925763}
+  m_Layer: 0
+  m_Name: Motor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8851280896254925763
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5369035350166962058}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5894421492192948957}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5808844019630404938
 GameObject:
   m_ObjectHideFlags: 0
@@ -686,6 +746,38 @@ Transform:
   m_Father: {fileID: 4709068818895053746}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 15.298, y: 0, z: 0}
+--- !u!1 &5925090844113303388
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4201140319508389272}
+  m_Layer: 0
+  m_Name: Wheels
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4201140319508389272
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5925090844113303388}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 6217087760342573500}
+  - {fileID: 6217087760533951930}
+  m_Father: {fileID: 5894421492192948957}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6217087759124894459
 GameObject:
   m_ObjectHideFlags: 0
@@ -1178,8 +1270,8 @@ Transform:
   - {fileID: 6217087760147159744}
   - {fileID: 6217087760102731946}
   - {fileID: 6217087759583069146}
-  m_Father: {fileID: 5894421492192948957}
-  m_RootOrder: 5
+  m_Father: {fileID: 4201140319508389272}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6217087760533951909
 GameObject:
@@ -1205,15 +1297,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6217087760533951909}
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0.0000029355283}
-  m_LocalPosition: {x: -0.0000000014491945, y: 0, z: -0.0486269}
+  m_LocalPosition: {x: 0, y: 0, z: -0.0486269}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4254839807768332390}
   - {fileID: 3825605696886997208}
   - {fileID: 7718030011535492843}
   - {fileID: 4581229285652200438}
-  m_Father: {fileID: 5894421492192948957}
-  m_RootOrder: 2
+  m_Father: {fileID: 4201140319508389272}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &6457382887323291576
 GameObject:
@@ -1309,6 +1401,7 @@ GameObject:
   - component: {fileID: 5894421492192948957}
   - component: {fileID: 6523149262298474596}
   - component: {fileID: 6523149262298474597}
+  - component: {fileID: 4171312986642540751}
   - component: {fileID: 3905475754243074189}
   - component: {fileID: 3140777706798847025}
   - component: {fileID: 3335308468194084806}
@@ -1333,10 +1426,11 @@ Transform:
   m_Children:
   - {fileID: 6217087759124894462}
   - {fileID: 7548460940024553751}
-  - {fileID: 6217087760533951930}
+  - {fileID: 4201140319508389272}
   - {fileID: 2794374449280870419}
   - {fileID: 4709068818895053746}
-  - {fileID: 6217087760342573500}
+  - {fileID: 8851280896254925763}
+  - {fileID: 7682916438287236296}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1369,13 +1463,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraTransform: {fileID: 6217087759124894462}
-  traccion: 2
   isAutomatic: 1
   downForceValue: 6
-  motorForce: 3000
+  motorForce: 1000
   brakeForce: 1500
-  maxSteerAngle: 30
-  maxSpeed: 400
+  maxSpeed: 230
+  actualSpeed: 0
   GearRatio:
   - 1
   - 2
@@ -1385,18 +1478,37 @@ MonoBehaviour:
   - 6
   maxEngineRPM: 6000
   minEngineRPM: 1000
+--- !u!114 &4171312986642540751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6523149262298474599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e91d4a86f2d83c499725862f8c4b7ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   frictionMultiplier: 3
-  frontLeftWheelCollider: {fileID: 6217087760147159745}
-  frontRightWheelCollider: {fileID: 6217087759694715718}
-  rearLeftWheelCollider: {fileID: 6217087759583069147}
-  rearRightWheelCollider: {fileID: 6217087760102731947}
-  frontLeftWheelTransform: {fileID: 3825605696886997208}
-  frontRightWheeTransform: {fileID: 4254839807768332390}
-  rearLeftWheelTransform: {fileID: 4581229285652200438}
-  rearRightWheelTransform: {fileID: 7718030011535492843}
-  canDrift: 1
-  handBrakeFrictionMultiplier: 1
   maxStiffnes: 0.6
+  maxSteerAngle: 40
+  canDrift: 0
+  traccion: 2
+  handBrakeFrictionMultiplier: 2
+  frontLeftWheelCollider: {fileID: 6217087759694715718}
+  frontRightWheelCollider: {fileID: 6217087760147159745}
+  rearLeftWheelCollider: {fileID: 6217087760102731947}
+  rearRightWheelCollider: {fileID: 6217087759583069147}
+  frontLeftWheelTransform: {fileID: 4254839807768332390}
+  frontRightWheeTransform: {fileID: 3825605696886997208}
+  rearLeftWheelTransform: {fileID: 7718030011535492843}
+  rearRightWheelTransform: {fileID: 4581229285652200438}
+  wheelColliders:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &3905475754243074189
 MonoBehaviour:
   m_ObjectHideFlags: 0
