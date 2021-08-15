@@ -11,7 +11,8 @@ public class CarController : NetworkBehaviour
     [SerializeField] Traccion traccion;
     [SerializeField] bool isAutomatic = true;
 
-
+    [Range(5, 20)] [SerializeField] private float downForceValue;
+    private float downforce;
     [Header("Motor")]
     [SerializeField] private float motorForce = 50;
     [SerializeField] private float brakeForce;
@@ -82,6 +83,7 @@ public class CarController : NetworkBehaviour
     {
         if (IsLocalPlayer)
         {
+            addDownForce();
             actualSpeed = rb.velocity.magnitude * 3.6f;
 
             GetInput();
@@ -96,12 +98,20 @@ public class CarController : NetworkBehaviour
                 ShiftGearManual();
             }
             AnimateWheels();
-            if(!canDrift){
+            if (!canDrift)
+            {
                 Brakes();
-            }else{
-                checkWheelSpin();
             }
+
+            checkWheelSpin();
         }
+    }
+    private void addDownForce()
+    {
+        downforce = Mathf.Abs(downForceValue * rb.velocity.magnitude);
+        downforce = actualSpeed > 60 ? downforce : 0;
+        rb.AddForce(-transform.up * downforce);
+
     }
     public void GetInput()
     {
@@ -185,6 +195,10 @@ public class CarController : NetworkBehaviour
         {
             DisableMotor(0f);
         }
+
+        // Endereza el coche
+        rb.angularDrag = (actualSpeed > 100) ? actualSpeed / 100 : 0;
+        rb.drag = 0.02f + (actualSpeed / 40000);
 
     }
     private bool GoingBackwards()
@@ -312,106 +326,186 @@ public class CarController : NetworkBehaviour
     }
     void checkWheelSpin()
     {
-        float velocity = 0;
-
-        if (!Input.GetKeyDown(KeyCode.Space))
+        if (canDrift)
         {
-            forwardFriction = wheelColliders[0].forwardFriction;
-            sidewaysFriction = wheelColliders[0].sidewaysFriction;
+            float velocity = 0;
 
-            forwardFriction.extremumValue = forwardFriction.asymptoteValue = ((rb.velocity.magnitude * frictionMultiplier) / 300) + 1;
-            sidewaysFriction.extremumValue = sidewaysFriction.asymptoteValue = ((rb.velocity.magnitude * frictionMultiplier) / 300) + 1;
-
-            for (int i = 0; i < 2; i++)
+            if (!Input.GetKeyDown(KeyCode.Space))
             {
-                wheelColliders[i].forwardFriction = forwardFriction;
-                wheelColliders[i].sidewaysFriction = sidewaysFriction;
+                forwardFriction = wheelColliders[0].forwardFriction;
+                sidewaysFriction = wheelColliders[0].sidewaysFriction;
 
+                forwardFriction.extremumValue = forwardFriction.asymptoteValue = ((rb.velocity.magnitude * frictionMultiplier) / 300) + 1;
+                sidewaysFriction.extremumValue = sidewaysFriction.asymptoteValue = ((rb.velocity.magnitude * frictionMultiplier) / 300) + 1;
+
+                for (int i = 0; i < 2; i++)
+                {
+                    wheelColliders[i].forwardFriction = forwardFriction;
+                    wheelColliders[i].sidewaysFriction = sidewaysFriction;
+
+                }
             }
-        }
-        else
-        {
-            sidewaysFriction = wheelColliders[0].sidewaysFriction;
-            forwardFriction = wheelColliders[0].forwardFriction;
+            else
+            {
+                sidewaysFriction = wheelColliders[0].sidewaysFriction;
+                forwardFriction = wheelColliders[0].forwardFriction;
 
-            velocity = 0;
-            sidewaysFriction.extremumValue = sidewaysFriction.asymptoteValue = Mathf.SmoothDamp(sidewaysFriction.asymptoteValue, handBrakeFriction, ref velocity, 0.05f * Time.deltaTime);
-            forwardFriction.extremumValue = forwardFriction.asymptoteValue = Mathf.SmoothDamp(forwardFriction.asymptoteValue, handBrakeFriction, ref velocity, 0.05f * Time.deltaTime);
+                velocity = 0;
+                sidewaysFriction.extremumValue = sidewaysFriction.asymptoteValue = Mathf.SmoothDamp(sidewaysFriction.asymptoteValue, handBrakeFriction, ref velocity, 0.05f * Time.deltaTime);
+                forwardFriction.extremumValue = forwardFriction.asymptoteValue = Mathf.SmoothDamp(forwardFriction.asymptoteValue, handBrakeFriction, ref velocity, 0.05f * Time.deltaTime);
+                for (int i = 2; i < 4; i++)
+                {
+                    wheelColliders[i].sidewaysFriction = sidewaysFriction;
+                    wheelColliders[i].forwardFriction = forwardFriction;
+                }
+
+                sidewaysFriction.extremumValue = sidewaysFriction.asymptoteValue = 1.5f;
+                forwardFriction.extremumValue = forwardFriction.asymptoteValue = 1.5f;
+
+                for (int i = 0; i < 2; i++)
+                {
+                    wheelColliders[i].sidewaysFriction = sidewaysFriction;
+                    wheelColliders[i].forwardFriction = forwardFriction;
+                }
+            }
+
+
             for (int i = 2; i < 4; i++)
             {
-                wheelColliders[i].sidewaysFriction = sidewaysFriction;
-                wheelColliders[i].forwardFriction = forwardFriction;
-            }
+                WheelHit wheelHit;
 
-            sidewaysFriction.extremumValue = sidewaysFriction.asymptoteValue = 1.5f;
-            forwardFriction.extremumValue = forwardFriction.asymptoteValue = 1.5f;
+                wheelColliders[i].GetGroundHit(out wheelHit);
+                if (wheelHit.sidewaysSlip < 0)
+                {
+                    tempo = (1 + -horizontalInput) * Mathf.Abs(wheelHit.sidewaysSlip * handBrakeFrictionMultiplier);
 
-            for (int i = 0; i < 2; i++)
-            {
-                wheelColliders[i].sidewaysFriction = sidewaysFriction;
-                wheelColliders[i].forwardFriction = forwardFriction;
+                    if (wheelHit.sidewaysSlip > -maxStiffnes)
+                    {
+                        sidewaysFriction = wheelColliders[i].sidewaysFriction;
+                        sidewaysFriction.stiffness = 1f - (-wheelHit.sidewaysSlip) / 2;
+                        wheelColliders[i].sidewaysFriction = sidewaysFriction;
+                    }
+
+                }
+                if (tempo < 0.5) tempo = 0.5f;
+                if (wheelHit.sidewaysSlip > 0)
+                {
+                    tempo = (1 + horizontalInput) * Mathf.Abs(wheelHit.sidewaysSlip * handBrakeFrictionMultiplier);
+
+                    if (wheelHit.sidewaysSlip < maxStiffnes)
+                    {
+                        sidewaysFriction = wheelColliders[i].sidewaysFriction;
+                        sidewaysFriction.stiffness = 1f - wheelHit.sidewaysSlip / 2;
+                        wheelColliders[i].sidewaysFriction = sidewaysFriction;
+                    }
+
+                }
+                if (tempo < 0.5) tempo = 0.5f;
             }
         }
 
-
-        for (int i = 2; i < 4; i++)
+        if (!canDrift)
         {
-            WheelHit wheelHit;
+            sidewaysFriction = wheelColliders[0].sidewaysFriction;
+            forwardFriction = wheelColliders[0].forwardFriction;
 
-            wheelColliders[i].GetGroundHit(out wheelHit);
-            if (wheelHit.sidewaysSlip < 0)
+            for (int i = 0; i < 4; i++)
             {
-                tempo = (1 + -horizontalInput) * Mathf.Abs(wheelHit.sidewaysSlip * handBrakeFrictionMultiplier);
+                forwardFriction = wheelColliders[i].forwardFriction;
+                forwardFriction.extremumValue = 1.4f + actualSpeed / maxSpeed * 1.26f;
+                wheelColliders[i].forwardFriction = forwardFriction;
 
-                if (wheelHit.sidewaysSlip > -maxStiffnes)
-                {
-                    sidewaysFriction = wheelColliders[i].sidewaysFriction;
-                    sidewaysFriction.stiffness = 1f - (-wheelHit.sidewaysSlip) / 2;
-                    wheelColliders[i].sidewaysFriction = sidewaysFriction;
-                }
+                sidewaysFriction = wheelColliders[i].sidewaysFriction;
+                sidewaysFriction.extremumValue = 1 + actualSpeed / maxSpeed * 0.6f;
+                wheelColliders[i].sidewaysFriction = sidewaysFriction;
 
             }
-            if (tempo < 0.5) tempo = 0.5f;
-            if (wheelHit.sidewaysSlip > 0)
-            {
-                tempo = (1 + horizontalInput) * Mathf.Abs(wheelHit.sidewaysSlip * handBrakeFrictionMultiplier);
-
-                if (wheelHit.sidewaysSlip < maxStiffnes)
-                {
-                    sidewaysFriction = wheelColliders[i].sidewaysFriction;
-                    sidewaysFriction.stiffness = 1f - wheelHit.sidewaysSlip / 2;
-                    wheelColliders[i].sidewaysFriction = sidewaysFriction;
-                }
-
-            }
-            if (tempo < 0.5) tempo = 0.5f;
         }
     }
-
     private void SetUpWheelColliders()
     {
         if (traccion == Traccion.n4x4 && canDrift)
         {
-            SetUpWheelCollider(frontLeftWheelCollider, 1, 1);
-            SetUpWheelCollider(frontRightWheelCollider, 1, 1);
-            SetUpWheelCollider(rearLeftWheelCollider, 1, 0.5f);
-            SetUpWheelCollider(rearRightWheelCollider, 1, 0.5f);
+            for (int i = 0; i < 4; i++)
+            {
+                JointSpring susSpring = wheelColliders[i].suspensionSpring;
+                susSpring.spring = 96600f;
+                susSpring.damper = 9000f;
+                wheelColliders[i].suspensionSpring = susSpring;
+
+                forwardFriction = wheelColliders[i].forwardFriction;
+                sidewaysFriction = wheelColliders[i].sidewaysFriction;
+
+                // forward friction
+                forwardFriction.asymptoteSlip = 0.8f;
+                forwardFriction.asymptoteValue = 0.5f;
+                forwardFriction.stiffness = 1f;
+
+
+                // sideway Friction
+                sidewaysFriction.asymptoteSlip = 0.5f;
+                sidewaysFriction.asymptoteValue = 0.75f;
+                sidewaysFriction.stiffness = 1f;
+
+                wheelColliders[i].forwardFriction = forwardFriction;
+                wheelColliders[i].sidewaysFriction = sidewaysFriction;
+
+                if (i < 2)
+                {
+                    forwardFriction = wheelColliders[i].forwardFriction;
+                    sidewaysFriction = wheelColliders[i].sidewaysFriction;
+
+                    forwardFriction.extremumSlip = 1f;
+                    sidewaysFriction.extremumSlip = 1f;
+
+                    wheelColliders[i].forwardFriction = forwardFriction;
+                    wheelColliders[i].sidewaysFriction = sidewaysFriction;
+                }
+                else
+                {
+                    forwardFriction = wheelColliders[i].forwardFriction;
+                    sidewaysFriction = wheelColliders[i].sidewaysFriction;
+
+                    forwardFriction.extremumSlip = 1f;
+                    sidewaysFriction.extremumSlip = 0.5f;
+
+                    wheelColliders[i].forwardFriction = forwardFriction;
+                    wheelColliders[i].sidewaysFriction = sidewaysFriction;
+                }
+
+            }
+
         }
 
-        if(!canDrift){
-            
+        if (!canDrift)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+
+                JointSpring susSpring = wheelColliders[i].suspensionSpring;
+                susSpring.spring = 120000f;
+                susSpring.damper = 16000f;
+                wheelColliders[i].suspensionSpring = susSpring;
+
+                forwardFriction = wheelColliders[i].forwardFriction;
+                sidewaysFriction = wheelColliders[i].sidewaysFriction;
+
+                // forward friction
+                forwardFriction.extremumSlip = 0.4f;
+                forwardFriction.asymptoteSlip = 1.67f;
+                forwardFriction.asymptoteValue = 0.55f;
+                forwardFriction.stiffness = 1.12f;
+
+                // sideway Friction
+
+                sidewaysFriction.extremumSlip = 0.25f;
+                sidewaysFriction.asymptoteSlip = 0.32f;
+                sidewaysFriction.asymptoteValue = 0.45f;
+                sidewaysFriction.stiffness = 1.12f;
+
+                wheelColliders[i].forwardFriction = forwardFriction;
+                wheelColliders[i].sidewaysFriction = sidewaysFriction;
+            }
         }
-    }
-    private void SetUpWheelCollider(WheelCollider wheelCo, float slipForward, float slipSideway)
-    {
-
-        forwardFriction = wheelCo.forwardFriction;
-        sidewaysFriction = wheelCo.sidewaysFriction;
-
-        forwardFriction.extremumSlip = slipForward;
-        sidewaysFriction.extremumSlip = slipSideway;
-
-        wheelCo.forwardFriction = forwardFriction;
-        wheelCo.sidewaysFriction = sidewaysFriction;
     }
 }

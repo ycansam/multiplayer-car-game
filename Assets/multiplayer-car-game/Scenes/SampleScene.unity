@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.2996278, g: 0.2854129, b: 0.23374572, a: 1}
+  m_IndirectSpecularColor: {r: 0.27942085, g: 0.26139203, b: 0.20664743, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1507,4 +1507,6 @@ MonoBehaviour:
   frontRightWheeTransform: {fileID: 1343498041864018367}
   rearLeftWheelTransform: {fileID: 6851838293867108450}
   rearRightWheelTransform: {fileID: 837289117700384127}
+  canDrift: 0
   handBrakeFrictionMultiplier: 2
+  maxStiffnes: 0.6
