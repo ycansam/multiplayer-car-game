@@ -29,7 +29,7 @@ Transform:
   m_Children:
   - {fileID: 1125599842148820842}
   m_Father: {fileID: 5894421492192948957}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1312280370224148071
 GameObject:
@@ -221,7 +221,7 @@ Transform:
   - {fileID: 2682714826776818806}
   - {fileID: 7292672534005826860}
   m_Father: {fileID: 5894421492192948957}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3752344224366614299
 GameObject:
@@ -958,7 +958,7 @@ WheelCollider:
     m_AsymptoteValue: 0.5
     m_Stiffness: 1
   m_SidewaysFriction:
-    m_ExtremumSlip: 0.2
+    m_ExtremumSlip: 0.35
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
@@ -1019,8 +1019,8 @@ WheelCollider:
     m_AsymptoteValue: 0.5
     m_Stiffness: 1
   m_SidewaysFriction:
-    m_ExtremumSlip: 0.2
-    m_ExtremumValue: 1
+    m_ExtremumSlip: 1
+    m_ExtremumValue: 1.5
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
     m_Stiffness: 1
@@ -1080,7 +1080,7 @@ WheelCollider:
     m_AsymptoteValue: 0.5
     m_Stiffness: 1
   m_SidewaysFriction:
-    m_ExtremumSlip: 0.2
+    m_ExtremumSlip: 0.35
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
@@ -1141,8 +1141,8 @@ WheelCollider:
     m_AsymptoteValue: 0.5
     m_Stiffness: 1
   m_SidewaysFriction:
-    m_ExtremumSlip: 0.2
-    m_ExtremumValue: 1
+    m_ExtremumSlip: 1
+    m_ExtremumValue: 1.5
     m_AsymptoteSlip: 0.5
     m_AsymptoteValue: 0.75
     m_Stiffness: 1
@@ -1179,7 +1179,7 @@ Transform:
   - {fileID: 6217087760102731946}
   - {fileID: 6217087759583069146}
   m_Father: {fileID: 5894421492192948957}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6217087760533951909
 GameObject:
@@ -1334,9 +1334,9 @@ Transform:
   - {fileID: 6217087759124894462}
   - {fileID: 7548460940024553751}
   - {fileID: 6217087760533951930}
-  - {fileID: 6217087760342573500}
   - {fileID: 2794374449280870419}
   - {fileID: 4709068818895053746}
+  - {fileID: 6217087760342573500}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1371,7 +1371,7 @@ MonoBehaviour:
   cameraTransform: {fileID: 6217087759124894462}
   traccion: 2
   isAutomatic: 1
-  motorForce: 3000
+  motorForce: 2000
   brakeForce: 1500
   maxSteerAngle: 30
   maxSpeed: 230
@@ -1384,6 +1384,7 @@ MonoBehaviour:
   - 6
   maxEngineRPM: 6000
   minEngineRPM: 1000
+  frictionMultiplier: 3
   frontLeftWheelCollider: {fileID: 6217087760147159745}
   frontRightWheelCollider: {fileID: 6217087759694715718}
   rearLeftWheelCollider: {fileID: 6217087759583069147}
@@ -1392,6 +1393,9 @@ MonoBehaviour:
   frontRightWheeTransform: {fileID: 4254839807768332390}
   rearLeftWheelTransform: {fileID: 4581229285652200438}
   rearRightWheelTransform: {fileID: 7718030011535492843}
+  canDrift: 0
+  handBrakeFrictionMultiplier: 2
+  maxStiffnes: 0.6
 --- !u!114 &3905475754243074189
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1832,7 +1836,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8795462413371747723}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.421, z: -0.015}
+  m_LocalPosition: {x: 0, y: 0.202, z: -0.015}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4709068818895053746}

@@ -28,17 +28,25 @@ public class CarController : NetworkBehaviour
 
 
     [Header("Ruedas")]
+    public float frictionMultiplier = 3f;
     [SerializeField] private WheelCollider frontLeftWheelCollider, frontRightWheelCollider;
     [SerializeField] private WheelCollider rearLeftWheelCollider, rearRightWheelCollider;
 
     [SerializeField] private Transform frontLeftWheelTransform, frontRightWheeTransform;
     [SerializeField] private Transform rearLeftWheelTransform, rearRightWheelTransform;
+    private WheelCollider[] wheelColliders = new WheelCollider[4];
+    [SerializeField] bool canDrift;
 
 
     Rigidbody rb;
     private float horizontalInput;
     private float verticalInput;
     private float steeringAngle;
+    private float tempo;
+    public float handBrakeFrictionMultiplier = 2;
+    private float handBrakeFriction = 0.05f;
+    private WheelFrictionCurve forwardFriction, sidewaysFriction;
+    [SerializeField] float maxStiffnes = 0.6f;
 
     private void OnGUI()
     {
@@ -62,6 +70,12 @@ public class CarController : NetworkBehaviour
             rb = GetComponent<Rigidbody>();
             maxSpeed = maxSpeed + 0.35f; // para evitar errores en el gui
             maxSpeedByGear = maxSpeed / GearRatio.Length; // maxima velocidad por marcha
+
+            wheelColliders[0] = frontLeftWheelCollider;
+            wheelColliders[1] = frontRightWheelCollider;
+            wheelColliders[2] = rearLeftWheelCollider;
+            wheelColliders[3] = rearRightWheelCollider;
+            SetUpWheelColliders();
         }
     }
     private void FixedUpdate()
@@ -81,14 +95,23 @@ public class CarController : NetworkBehaviour
             {
                 ShiftGearManual();
             }
-            UpdateWheelPoses();
-            Brakes();
+            AnimateWheels();
+            if(!canDrift){
+                Brakes();
+            }else{
+                checkWheelSpin();
+            }
         }
     }
     public void GetInput()
     {
         horizontalInput = Input.GetAxis(GameConstants.HORIZONTAL);
         verticalInput = Input.GetAxis(GameConstants.VERTICAL);
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z);
+            transform.rotation = new Quaternion(transform.rotation.x, transform.rotation.y, transform.rotation.z, 0f);
+        }
     }
     private void Steer()
     {
@@ -144,7 +167,6 @@ public class CarController : NetworkBehaviour
 
             if (traccion == Traccion.Trasera)
             {
-                Debug.Log(CheckingCorrectGear());
                 rearLeftWheelCollider.motorTorque = verticalInput * motorForce / CheckingCorrectGear();
                 rearRightWheelCollider.motorTorque = verticalInput * motorForce / CheckingCorrectGear();
                 engineRPM = GetEngineRPM(rearLeftWheelCollider, rearRightWheelCollider);
@@ -199,7 +221,7 @@ public class CarController : NetworkBehaviour
             {
                 if (currentGear < GearRatio.Length - 1)
                 {
-                    DisableMotor(0f);
+                    // DisableMotor(-20f);
                     currentGear++;
                 }
 
@@ -271,14 +293,14 @@ public class CarController : NetworkBehaviour
 
 
     // wheels positions
-    private void UpdateWheelPoses()
+    private void AnimateWheels()
     {
-        UpdateWheelPose(frontLeftWheelCollider, frontLeftWheelTransform);
-        UpdateWheelPose(frontRightWheelCollider, frontRightWheeTransform);
-        UpdateWheelPose(rearLeftWheelCollider, rearLeftWheelTransform);
-        UpdateWheelPose(rearRightWheelCollider, rearRightWheelTransform);
+        AnimateWheel(frontLeftWheelCollider, frontLeftWheelTransform);
+        AnimateWheel(frontRightWheelCollider, frontRightWheeTransform);
+        AnimateWheel(rearLeftWheelCollider, rearLeftWheelTransform);
+        AnimateWheel(rearRightWheelCollider, rearRightWheelTransform);
     }
-    private void UpdateWheelPose(WheelCollider _collider, Transform _transform)
+    private void AnimateWheel(WheelCollider _collider, Transform _transform)
     {
         Vector3 _pos = _transform.position;
         Quaternion _quat = _transform.rotation;
@@ -287,5 +309,109 @@ public class CarController : NetworkBehaviour
 
         _transform.position = _pos;
         _transform.rotation = _quat;
+    }
+    void checkWheelSpin()
+    {
+        float velocity = 0;
+
+        if (!Input.GetKeyDown(KeyCode.Space))
+        {
+            forwardFriction = wheelColliders[0].forwardFriction;
+            sidewaysFriction = wheelColliders[0].sidewaysFriction;
+
+            forwardFriction.extremumValue = forwardFriction.asymptoteValue = ((rb.velocity.magnitude * frictionMultiplier) / 300) + 1;
+            sidewaysFriction.extremumValue = sidewaysFriction.asymptoteValue = ((rb.velocity.magnitude * frictionMultiplier) / 300) + 1;
+
+            for (int i = 0; i < 2; i++)
+            {
+                wheelColliders[i].forwardFriction = forwardFriction;
+                wheelColliders[i].sidewaysFriction = sidewaysFriction;
+
+            }
+        }
+        else
+        {
+            sidewaysFriction = wheelColliders[0].sidewaysFriction;
+            forwardFriction = wheelColliders[0].forwardFriction;
+
+            velocity = 0;
+            sidewaysFriction.extremumValue = sidewaysFriction.asymptoteValue = Mathf.SmoothDamp(sidewaysFriction.asymptoteValue, handBrakeFriction, ref velocity, 0.05f * Time.deltaTime);
+            forwardFriction.extremumValue = forwardFriction.asymptoteValue = Mathf.SmoothDamp(forwardFriction.asymptoteValue, handBrakeFriction, ref velocity, 0.05f * Time.deltaTime);
+            for (int i = 2; i < 4; i++)
+            {
+                wheelColliders[i].sidewaysFriction = sidewaysFriction;
+                wheelColliders[i].forwardFriction = forwardFriction;
+            }
+
+            sidewaysFriction.extremumValue = sidewaysFriction.asymptoteValue = 1.5f;
+            forwardFriction.extremumValue = forwardFriction.asymptoteValue = 1.5f;
+
+            for (int i = 0; i < 2; i++)
+            {
+                wheelColliders[i].sidewaysFriction = sidewaysFriction;
+                wheelColliders[i].forwardFriction = forwardFriction;
+            }
+        }
+
+
+        for (int i = 2; i < 4; i++)
+        {
+            WheelHit wheelHit;
+
+            wheelColliders[i].GetGroundHit(out wheelHit);
+            if (wheelHit.sidewaysSlip < 0)
+            {
+                tempo = (1 + -horizontalInput) * Mathf.Abs(wheelHit.sidewaysSlip * handBrakeFrictionMultiplier);
+
+                if (wheelHit.sidewaysSlip > -maxStiffnes)
+                {
+                    sidewaysFriction = wheelColliders[i].sidewaysFriction;
+                    sidewaysFriction.stiffness = 1f - (-wheelHit.sidewaysSlip) / 2;
+                    wheelColliders[i].sidewaysFriction = sidewaysFriction;
+                }
+
+            }
+            if (tempo < 0.5) tempo = 0.5f;
+            if (wheelHit.sidewaysSlip > 0)
+            {
+                tempo = (1 + horizontalInput) * Mathf.Abs(wheelHit.sidewaysSlip * handBrakeFrictionMultiplier);
+
+                if (wheelHit.sidewaysSlip < maxStiffnes)
+                {
+                    sidewaysFriction = wheelColliders[i].sidewaysFriction;
+                    sidewaysFriction.stiffness = 1f - wheelHit.sidewaysSlip / 2;
+                    wheelColliders[i].sidewaysFriction = sidewaysFriction;
+                }
+
+            }
+            if (tempo < 0.5) tempo = 0.5f;
+        }
+    }
+
+    private void SetUpWheelColliders()
+    {
+        if (traccion == Traccion.n4x4 && canDrift)
+        {
+            SetUpWheelCollider(frontLeftWheelCollider, 1, 1);
+            SetUpWheelCollider(frontRightWheelCollider, 1, 1);
+            SetUpWheelCollider(rearLeftWheelCollider, 1, 0.5f);
+            SetUpWheelCollider(rearRightWheelCollider, 1, 0.5f);
+        }
+
+        if(!canDrift){
+            
+        }
+    }
+    private void SetUpWheelCollider(WheelCollider wheelCo, float slipForward, float slipSideway)
+    {
+
+        forwardFriction = wheelCo.forwardFriction;
+        sidewaysFriction = wheelCo.sidewaysFriction;
+
+        forwardFriction.extremumSlip = slipForward;
+        sidewaysFriction.extremumSlip = slipSideway;
+
+        wheelCo.forwardFriction = forwardFriction;
+        wheelCo.sidewaysFriction = sidewaysFriction;
     }
 }
