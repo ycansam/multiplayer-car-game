@@ -473,8 +473,9 @@ GameObject:
   - component: {fileID: 9010064681457300567}
   - component: {fileID: 3867946882143297819}
   - component: {fileID: 2084546081077950683}
+  - component: {fileID: 6142766616371593150}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: Panel_CarParts
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -537,6 +538,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6142766616371593150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3568019558413105421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd0eb7fe263443d47b52935af99a4f57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  btnCarParts: {fileID: 5888534181283541502, guid: b210518c38a4639479083645d19e836b, type: 3}
+  inventoryReference: {fileID: 5602924901938540445}
 --- !u!1 &3752344224366614299
 GameObject:
   m_ObjectHideFlags: 0
@@ -2163,7 +2178,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CarParts:
-    CarPartsTypesList: []
+    CarPartsTypesList:
+    - carPartList: []
+      partType: 0
+      hudSprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+    - carPartList: []
+      partType: 1
+      hudSprite: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!1 &7216494914967367089
 GameObject:
   m_ObjectHideFlags: 0
@@ -2441,12 +2462,13 @@ MonoBehaviour:
     CarPartsTypesList:
     - carPartList: []
       partType: 0
+      hudSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
     - carPartList: []
       partType: 1
+      hudSprite: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
     - carPartList: []
       partType: 2
-    - carPartList: []
-      partType: 0
+      hudSprite: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!1 &7939879734841970467
 GameObject:
   m_ObjectHideFlags: 0

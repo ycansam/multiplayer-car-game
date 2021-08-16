@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum PartType{Chasis, Motor, Brakes}
 
@@ -8,6 +9,7 @@ public enum PartType{Chasis, Motor, Brakes}
 public class CarPartType{
     public List<GameObject> carPartList = new List<GameObject>();
     public PartType partType;
+    public Sprite hudSprite;
 }
 [System.Serializable]
 public class CarPartsType 
