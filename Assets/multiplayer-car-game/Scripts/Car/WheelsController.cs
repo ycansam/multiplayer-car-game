@@ -18,7 +18,8 @@ public class WheelsController : NetworkBehaviour
     private float handBrakeFriction = 0.05f;
 
     [Header("Ruedas")]
-    [SerializeField] private WheelCollider frontLeftWheelCollider, frontRightWheelCollider;
+    [SerializeField] private WheelCollider frontLeftWheelCollider;
+    [SerializeField] private WheelCollider frontRightWheelCollider;
     [SerializeField] private WheelCollider rearLeftWheelCollider, rearRightWheelCollider;
 
     [SerializeField] private Transform frontLeftWheelTransform, frontRightWheeTransform;

@@ -73,4 +73,7 @@ public class CameraController : NetworkBehaviour
         }
         return cameraViews[currentCamera];
     }
+    public Transform GetCurrentCamera(){
+        return cameraViews[currentCamera];
+    }
 }
