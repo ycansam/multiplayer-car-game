@@ -20,7 +20,5 @@ public class Inventory : MonoBehaviour
             DestroyImmediate(gameObject);
         }
     }
-    private void Start() {
-        Debug.Log(CarParts.CarPartsTypesList.Count);
-    }
+    
 }

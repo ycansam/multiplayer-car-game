@@ -6,13 +6,8 @@ using UnityEngine.UI;
 public class BtnCarPartsType : MonoBehaviour
 {
     private CarPartType carPartType;
-
-    [SerializeField]
-    private Image imageCarPart;
-
-    [SerializeField]
-    private Text textName;
-
+    [SerializeField] private Image imageCarPart; // indicar en el inspector
+    [SerializeField] private Text textName; // indicar en el inspector que textos cambia
     private bool selected = false;
 
     /// <summary>
@@ -35,33 +30,38 @@ public class BtnCarPartsType : MonoBehaviour
     /// Asigna una lista de partes al bot�n
     /// </summary>
     /// <param name="datosCarPart">Objeto con los datos de las partes</param>
-    public void SetCarPartType(CarPartType dataCarPartType)
+    public void SetCarPartType(CarPartType dataCarPartType, bool disableText)
     {
         carPartType = dataCarPartType;
         imageCarPart.sprite = carPartType.hudSprite;
         textName.text = dataCarPartType.partType.ToString();
+        if(disableText)
+            textName.text = "";
+    }
+    public CarPartType GetPartType(){
+        return carPartType;
     }
 
     /// <summary>
     /// Selecciona el bot�n
-    // /// </summary>
-    // public void Select()
-    // {
-    //     ToolController.setPlanta(planta);
-    // }
+    /// </summary>
+    public void Select()
+    {
+        ToolControllerCarParts.SetCarPart(carPartType);
+    }
 
-    // private void OnChangePlanta()
-    // {
-    //     Selected = ToolController.planta == planta;
-    // }
+    private void OnChangeCarPartTypes()
+    {
+        Selected = ToolControllerCarParts.CarPartType == carPartType;
+    }
 
-    // private void OnEnable()
-    // {
-    //     ToolController.OnSetPlanta += OnChangePlanta;
-    // }
+    private void OnEnable()
+    {
+        ToolControllerCarParts.OnSelectCarPartType += OnChangeCarPartTypes;
+    }
 
-    // private void OnDisable()
-    // {
-    //     ToolController.OnSetPlanta -= OnChangePlanta;
-    // }
+    private void OnDisable()
+    {
+        ToolControllerCarParts.OnSelectCarPartType -= OnChangeCarPartTypes;
+    }
 }
