@@ -11,7 +11,10 @@ public class SelectorPart : MonoBehaviour
 
     private void Start()
     {
-        // referencia a su boton padre // motor, chasis, aleron, etc.
+        UpdateCarPartsButtons();
+    }  
+
+    private void UpdateCarPartsButtons(){
         CarPartType carPartType = btnParent.GetComponent<BtnCarPartsType>().GetPartType();
         Debug.Log(carPartType.carPartList.Count);
         for (int i = 0; i < 4; i++)
@@ -23,5 +26,4 @@ public class SelectorPart : MonoBehaviour
                 
         }
     }
-
 }

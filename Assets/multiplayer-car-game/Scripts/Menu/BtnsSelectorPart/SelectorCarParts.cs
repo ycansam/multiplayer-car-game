@@ -49,10 +49,8 @@ public class SelectorCarParts : MonoBehaviour
                         CarPartType carPartType = inventory.CarParts.CarPartsTypesList[i + arrayMoved];
                         arrayButtons[i].GetComponent<BtnCarPartsType>().SetCarPartType(carPartType, false);
                     }
-                    
-                }
 
-                Debug.Log(i + arrayMoved);
+                }
             }
             arrayButtons[ToolControllerCarParts.positionSelected].GetComponent<Button>().Select();
             arrayButtons[ToolControllerCarParts.positionSelected].GetComponent<Button>().onClick.Invoke();
@@ -77,7 +75,6 @@ public class SelectorCarParts : MonoBehaviour
                     }
 
                 }
-                Debug.Log(i + arrayMoved);
             }
             arrayButtons[ToolControllerCarParts.positionSelected].GetComponent<Button>().Select();
             arrayButtons[ToolControllerCarParts.positionSelected].GetComponent<Button>().onClick.Invoke();
@@ -89,6 +86,9 @@ public class SelectorCarParts : MonoBehaviour
     {
         arrayButtons[pos].GetComponent<Button>().Select();
         arrayButtons[pos].GetComponent<Button>().onClick.Invoke();
+
+        UpdateButtons();
+
     }
     bool activated = false;
     private void ChangePartSelection()
@@ -102,7 +102,6 @@ public class SelectorCarParts : MonoBehaviour
                 arrayMoved--;
             }
             OnChangeSelection(currentPart);
-            UpdateButtons();
         }
         if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetAxisRaw(GameConstants.VERTICAL) == -1 && !activated)
         {
@@ -113,11 +112,11 @@ public class SelectorCarParts : MonoBehaviour
                 arrayMoved++;
             }
             OnChangeSelection(currentPart);
-            UpdateButtons();
 
         }
 
-        if(Input.GetAxisRaw(GameConstants.VERTICAL) == 0){
+        if (Input.GetAxisRaw(GameConstants.VERTICAL) == 0)
+        {
             activated = false;
         }
     }
