@@ -6,22 +6,22 @@ using UnityEngine;
 public class ToolControllerCarPart : MonoBehaviour
 {
     public static Chasis chasis;
-    public static int chasisPos;
-    
+    public static int chasisPos = 0;
+
     public static Motor motor;
-    public static int motorPos;
+    public static int motorPos = 0;
 
     public static Brakes brakes;
-    public static int brakesPos;
+    public static int brakesPos = 0;
 
     public static Wheels wheels;
-    public static int wheelsPos;
+    public static int wheelsPos = 0;
 
     public static Lights lights;
-    public static int lightsPos;
+    public static int lightsPos = 0;
 
     public static Aleron aleron;
-    public static int aleronPos;
+    public static int aleronPos = 0;
 
 
     public static event Action OnSelectCarPart;

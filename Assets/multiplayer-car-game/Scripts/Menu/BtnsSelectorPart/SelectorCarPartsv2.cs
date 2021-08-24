@@ -20,7 +20,7 @@ public class SelectorCarPartsv2 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        startMove =  contentParent.position.y-2f;
+        startMove = contentParent.position.y - 2f;
         ToolControllerCarParts.positionSelected = 2;
         currentPart = ToolControllerCarParts.positionSelected;
 
@@ -54,7 +54,7 @@ public class SelectorCarPartsv2 : MonoBehaviour
             case Movement.UP:
                 contentParent.position = Vector3.Lerp(contentParent.position, new Vector3(contentParent.position.x, newMove, contentParent.position.z), 5f * Time.deltaTime);
                 if (contentParent.position.y == newMove)
-                    movement = Movement.NONE; 
+                    movement = Movement.NONE;
                 break;
             case Movement.DOWN:
                 contentParent.position = Vector3.Lerp(contentParent.position, new Vector3(contentParent.position.x, newMove, contentParent.position.z), 5f * Time.deltaTime);
@@ -68,11 +68,15 @@ public class SelectorCarPartsv2 : MonoBehaviour
         arrayButtons[pos].GetComponent<Button>().Select();
         arrayButtons[pos].GetComponent<Button>().onClick.Invoke();
 
+        // obtiene el boton car parts > parts selector > content > objetos (0)
+        if (arrayButtons[pos].GetComponent<BtnCarPartsType>().transform.GetChild(2).GetChild(0).transform.childCount > 0)
+            arrayButtons[pos].GetComponent<BtnCarPartsType>().transform.GetChild(2).GetChild(0).GetChild(arrayButtons[pos].GetComponent<BtnCarPartsType>().transform.GetChild(2).GetComponent<SelectorPart>().arrayMoved).GetComponent<Button>().Select();
+        Debug.Log(arrayButtons[pos].GetComponent<BtnCarPartsType>().transform.GetChild(2).GetChild(0).transform.childCount);
     }
     bool activated = false;
     private void ChangePartSelection()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetAxisRaw(GameConstants.VERTICAL) == 1 && !activated  )
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetAxisRaw(GameConstants.VERTICAL) == 1 && !activated)
         {
             activated = true;
             if (currentPart >= 0 && currentPart + arrayMoved >= 0)
@@ -80,12 +84,12 @@ public class SelectorCarPartsv2 : MonoBehaviour
                 currentPart--;
                 arrayMoved--;
                 movement = Movement.UP;
-                newMove = startMove - desplazamiento*(-arrayMoved);
+                newMove = startMove - desplazamiento * (-arrayMoved);
 
             }
             OnChangeSelection(currentPart);
         }
-        if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetAxisRaw(GameConstants.VERTICAL) == -1 && !activated )
+        if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetAxisRaw(GameConstants.VERTICAL) == -1 && !activated)
         {
             activated = true;
             if (currentPart <= inventory.CarParts.CarPartsTypesList.Count && currentPart + arrayMoved <= inventory.CarParts.CarPartsTypesList.Count)
@@ -93,7 +97,7 @@ public class SelectorCarPartsv2 : MonoBehaviour
                 currentPart++;
                 arrayMoved++;
                 movement = Movement.DOWN;
-                newMove = startMove + desplazamiento*arrayMoved;               
+                newMove = startMove + desplazamiento * arrayMoved;
             }
             OnChangeSelection(currentPart);
         }
