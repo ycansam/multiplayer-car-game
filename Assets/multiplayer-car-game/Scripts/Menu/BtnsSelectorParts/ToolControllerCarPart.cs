@@ -1,0 +1,45 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ToolControllerCarPart : MonoBehaviour
+{
+    public static Chasis chasis;
+    public static int chasisPos;
+    
+    public static Motor motor;
+    public static int motorPos;
+
+    public static Brakes brakes;
+    public static int brakesPos;
+
+    public static Wheels wheels;
+    public static int wheelsPos;
+
+    public static Lights lights;
+    public static int lightsPos;
+
+    public static Aleron aleron;
+    public static int aleronPos;
+
+
+    public static event Action OnSelectCarPart;
+    public static void SetCarPart(CarPart dataCarPart)
+    {
+        if (dataCarPart is Chasis)
+            chasis = dataCarPart as Chasis;
+        else if (dataCarPart is Motor)
+            motor = dataCarPart as Motor;
+        else if (dataCarPart is Brakes)
+            brakes = dataCarPart as Brakes;
+        else if (dataCarPart is Wheels)
+            wheels = dataCarPart as Wheels;
+        else if (dataCarPart is Lights)
+            lights = dataCarPart as Lights;
+        else if (dataCarPart is Aleron)
+            aleron = dataCarPart as Aleron;
+
+        OnSelectCarPart?.Invoke();
+    }
+}

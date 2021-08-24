@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69cf56ad0a50d594aa5e55e4dfc160a7, type: 3}
   m_Name: Motor 1
   m_EditorClassIdentifier: 
+  partType: 1
   carModelPart: 0
   partName: Motor 150 cv
   hudSprite: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}

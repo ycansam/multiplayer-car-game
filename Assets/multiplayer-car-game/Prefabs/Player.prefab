@@ -473,8 +473,6 @@ GameObject:
   - component: {fileID: 9010064681457300567}
   - component: {fileID: 3867946882143297819}
   - component: {fileID: 2084546081077950683}
-  - component: {fileID: 6142766616371593150}
-  - component: {fileID: 5202516305382099779}
   - component: {fileID: 8436467826530335771}
   - component: {fileID: 1267757803100329754}
   - component: {fileID: 2189436068850112655}
@@ -543,46 +541,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6142766616371593150
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3568019558413105421}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd0eb7fe263443d47b52935af99a4f57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  btnCarParts: {fileID: 5888534181283541502, guid: b210518c38a4639479083645d19e836b, type: 3}
-  inventory: {fileID: 5602924901938540445}
---- !u!114 &5202516305382099779
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3568019558413105421}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Padding:
-    m_Left: 0
-    m_Right: 0
-    m_Top: 0
-    m_Bottom: 0
-  m_ChildAlignment: 4
-  m_Spacing: 130
-  m_ChildForceExpandWidth: 0
-  m_ChildForceExpandHeight: 0
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
-  m_ReverseArrangement: 0
 --- !u!114 &8436467826530335771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -641,6 +599,7 @@ MonoBehaviour:
   btnCarParts: {fileID: 5888534181283541502, guid: b210518c38a4639479083645d19e836b, type: 3}
   inventory: {fileID: 5602924901938540445}
   contentParent: {fileID: 3462775215953053700}
+  desplazamiento: 1
 --- !u!1 &3752344224366614299
 GameObject:
   m_ObjectHideFlags: 0
@@ -1497,7 +1456,7 @@ MonoBehaviour:
   m_CancelButton: Cancel
   m_InputActionsPerSecond: 10
   m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
+  m_ForceModuleActive: 1
 --- !u!1 &6217087759124894459
 GameObject:
   m_ObjectHideFlags: 0
@@ -2620,6 +2579,12 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 9493386271ea12e43b34a3ebaf862bb6, type: 2}
       - {fileID: 11400000, guid: 31ab7d491971f7343a03d4b3c07fe46c, type: 2}
       - {fileID: 11400000, guid: 3ff4b612fa9e68a46a1842a0b363e716, type: 2}
+      - {fileID: 11400000, guid: 3ff4b612fa9e68a46a1842a0b363e716, type: 2}
+      - {fileID: 11400000, guid: 3ff4b612fa9e68a46a1842a0b363e716, type: 2}
+      - {fileID: 11400000, guid: 3ff4b612fa9e68a46a1842a0b363e716, type: 2}
+      - {fileID: 11400000, guid: 3ff4b612fa9e68a46a1842a0b363e716, type: 2}
+      - {fileID: 11400000, guid: 3ff4b612fa9e68a46a1842a0b363e716, type: 2}
+      - {fileID: 11400000, guid: 3ff4b612fa9e68a46a1842a0b363e716, type: 2}
       partType: 0
       hudSprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
     - carPartList:
@@ -2850,7 +2815,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8951585747556065072}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 9010064681457300567}
@@ -2858,7 +2823,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 129, y: -350}
+  m_AnchoredPosition: {x: 120, y: -350}
   m_SizeDelta: {x: 235.8, y: 700}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5378639566906377239
@@ -2879,7 +2844,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: 40
+  m_Spacing: 100
   m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0

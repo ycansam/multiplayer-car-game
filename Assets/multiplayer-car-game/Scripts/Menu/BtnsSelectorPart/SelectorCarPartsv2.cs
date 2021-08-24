@@ -8,6 +8,7 @@ public class SelectorCarPartsv2 : MonoBehaviour
     private GameObject btnCarParts;
     [SerializeField] private Inventory inventory;
     [SerializeField] private Transform contentParent;
+    [SerializeField] private float desplazamiento;
     private List<GameObject> arrayButtons = new List<GameObject>();
     private int currentPart;
     private int arrayMoved = 0;
@@ -19,7 +20,7 @@ public class SelectorCarPartsv2 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        startMove =  contentParent.position.y;
+        startMove =  contentParent.position.y-2f;
         ToolControllerCarParts.positionSelected = 2;
         currentPart = ToolControllerCarParts.positionSelected;
 
@@ -53,12 +54,12 @@ public class SelectorCarPartsv2 : MonoBehaviour
             case Movement.UP:
                 contentParent.position = Vector3.Lerp(contentParent.position, new Vector3(contentParent.position.x, newMove, contentParent.position.z), 5f * Time.deltaTime);
                 if (contentParent.position.y == newMove)
-                    movement = Movement.NONE; Debug.Log("As");
+                    movement = Movement.NONE; 
                 break;
             case Movement.DOWN:
                 contentParent.position = Vector3.Lerp(contentParent.position, new Vector3(contentParent.position.x, newMove, contentParent.position.z), 5f * Time.deltaTime);
                 if (contentParent.position.y == newMove)
-                    movement = Movement.NONE;Debug.Log("As");
+                    movement = Movement.NONE;
                 break;
         }
     }
@@ -79,7 +80,8 @@ public class SelectorCarPartsv2 : MonoBehaviour
                 currentPart--;
                 arrayMoved--;
                 movement = Movement.UP;
-                newMove = startMove - 0.5f*(-arrayMoved);
+                newMove = startMove - desplazamiento*(-arrayMoved);
+
             }
             OnChangeSelection(currentPart);
         }
@@ -91,10 +93,9 @@ public class SelectorCarPartsv2 : MonoBehaviour
                 currentPart++;
                 arrayMoved++;
                 movement = Movement.DOWN;
-                newMove = startMove + 0.5f*arrayMoved;
+                newMove = startMove + desplazamiento*arrayMoved;               
             }
             OnChangeSelection(currentPart);
-
         }
 
         if (Input.GetAxisRaw(GameConstants.VERTICAL) == 0)

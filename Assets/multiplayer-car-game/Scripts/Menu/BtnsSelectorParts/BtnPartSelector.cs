@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class BtnPartSelector : MonoBehaviour
 {
     private CarPart carPart;
-
     [SerializeField] private Image imageCarPart;
 
     [SerializeField] private Text textName;
@@ -17,13 +16,13 @@ public class BtnPartSelector : MonoBehaviour
     /// </summary>
     public bool Selected
     {
-        get => selected; 
+        get => selected;
         private set
         {
             if (selected == value) return;
             selected = value;
             Color c = imageCarPart.color;
-            c.a = selected ? 1f : .5f;
+            c.a = selected ? 1f : 0f;
             imageCarPart.color = c;
         }
     }
@@ -37,5 +36,47 @@ public class BtnPartSelector : MonoBehaviour
         carPart = dataCarPart;
         imageCarPart.sprite = carPart.hudSprite;
         textName.text = dataCarPart.partName;
+    }
+    public CarPart GetPartType()
+    {
+        return carPart;
+    }
+
+    /// <summary>
+    /// Selecciona el bot�n
+    /// </summary>
+    public void Select()
+    {
+        ToolControllerCarPart.SetCarPart(carPart);
+    }
+
+    private void OnChangeCarPart()
+    {
+        if (carPart is Chasis)
+            Selected = ToolControllerCarPart.chasis == carPart;
+        else if (carPart is Motor)
+            Selected = ToolControllerCarPart.motor == carPart;
+        else if (carPart is Chasis)
+            Selected = ToolControllerCarPart.motor == carPart;
+        else if (carPart is Motor)
+            Selected = ToolControllerCarPart.motor == carPart;
+        else if (carPart is Brakes)
+            Selected = ToolControllerCarPart.motor == carPart;
+        else if (carPart is Wheels)
+            Selected = ToolControllerCarPart.motor == carPart;
+        else if (carPart is Lights)
+            Selected = ToolControllerCarPart.motor == carPart;
+        else if (carPart is Aleron)
+            Selected = ToolControllerCarPart.motor == carPart;
+    }
+
+    private void OnEnable()
+    {
+        ToolControllerCarPart.OnSelectCarPart += OnChangeCarPart;
+    }
+
+    private void OnDisable()
+    {
+        ToolControllerCarPart.OnSelectCarPart -= OnChangeCarPart;
     }
 }
