@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b45e69c9cd707346a8d09d6aa78d69e, type: 3}
-  m_Name: Chasis
+  m_Name: Chasis Camaro
   m_EditorClassIdentifier: 
-  carModelPart: 0
-  partName: Chasis BMW E46
+  partType: 0
+  carModelPart: 1
+  partName: Chasis Camaro
   hudSprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
-  prefab: {fileID: 919132149155446097, guid: 0ea255a79a072f744b83818a22d5d026, type: 3}
+  prefab: {fileID: 6424083248237498859, guid: 64153bb0db4ab0343afc2dc87dc549b2, type: 3}
   height: 1500

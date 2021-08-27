@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b45e69c9cd707346a8d09d6aa78d69e, type: 3}
-  m_Name: Chasis 1
+  m_Name: Chasis BMW e46
   m_EditorClassIdentifier: 
+  partType: 0
   carModelPart: 0
   partName: Chasis BMW E46
   hudSprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
-  prefab: {fileID: 919132149155446097, guid: 0ea255a79a072f744b83818a22d5d026, type: 3}
+  prefab: {fileID: 6155750409058743335, guid: 7a6e3ea6c18e3ce47ac673ae933be061, type: 3}
   height: 1500

@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Events;
 public class ToolControllerCarPart : MonoBehaviour
 {
     public static Chasis chasis;
@@ -25,6 +25,8 @@ public class ToolControllerCarPart : MonoBehaviour
 
 
     public static event Action OnSelectCarPart;
+    public static UnityEvent partSelected= new UnityEvent();
+   
     public static void SetCarPart(CarPart dataCarPart)
     {
         if (dataCarPart is Chasis)
@@ -41,5 +43,6 @@ public class ToolControllerCarPart : MonoBehaviour
             aleron = dataCarPart as Aleron;
 
         OnSelectCarPart?.Invoke();
+        partSelected?.Invoke();
     }
 }
